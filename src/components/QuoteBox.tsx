@@ -8,6 +8,12 @@ interface Quote {
   author: string;
 }
 
+type RGB = {
+  r: number;
+  g: number;
+  b: number;
+}
+
 //好きなものを追加する
 const quotes: Quote[] = [
   { text: 'うそはうそであると見抜ける人でないと (掲示板を使うのは)難しい', author: 'ひろゆき' },
@@ -35,38 +41,47 @@ const QuoteBox: React.FC = () => {
     const newColor = getRandomColor();
     setBackgroundColor(newColor);
   };
+
   // 明度の計算
-  const calculateLuminance = (r, g, b) => {
-    return 0.299 * r + 0.587 * g + 0.114 * b;
+  const calculateLuminance = (rgb: RGB): number => {
+    return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
   }
-  // 明度を半分にする
-  const adjustColor = (r, g, b) => {
-    const luminance = calculateLuminance(r, g, b);
-    if (luminance > 128) {
-      r = Math.floor(r / 2);
-      g = Math.floor(g / 2);
-      b = Math.floor(b /2);
-    }
-    return [r, g, b];
-  }
+
   // ランダムな色の設定ロジック
-  const getRandomColor = () => {
-    const letters = '0123456789ABCDEF'
-    let color = '#'
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)]
-    }
-
-    let r = parseInt(color.slice(1, 3), 16);
-    let g = parseInt(color.slice(3, 5), 16);
-    let b = parseInt(color.slice(5, 7), 16);
-
-    [r, g, b] = adjustColor(r, g, b);
-      
-    const newColor = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
-
-    return newColor;
+  const getRandomRgb= (): RGB => {
+    return {
+      r: Math.floor(Math.random() * 256),
+      g: Math.floor(Math.random() * 256),
+      b: Math.floor(Math.random() * 256),
+    };
   };
+
+  // 16進数にする
+  const rgbToHex = (rgb: RGB): string => {
+    return `#${Object.values(rgb).map(n => n.toString(16).padStart(2, '0')).join('')}`
+  }
+
+  const adjustColor = (rgb: RGB): RGB => {
+    const luminance = calculateLuminance(rgb);
+    if (luminance > 128) {
+      return {
+        r: Math.floor(rgb.r / 2),
+        g: Math.floor(rgb.g / 2),
+        b: Math.floor(rgb.b / 2),
+      };
+    }
+    return rgb;
+  }
+
+  const getRandomColor = (): string => {
+    let rgb = getRandomRgb();
+
+    rgb = adjustColor(rgb);
+
+    const adjustedHexColor = rgbToHex(rgb);
+
+    return adjustedHexColor;
+  }
 
   const loadNewQuoteAndChangeColor = () => {
     updateQuote();
@@ -110,7 +125,7 @@ const QuoteBox: React.FC = () => {
       )}
 
       <button id="new-quote" onClick={loadNewQuoteAndChangeColor} className='outline-double mx-6 p-2'>新しくインターネットを補充する</button>
-      <a id="post-quote" onClick={postQuote} href="#" target="_blank" rel="noopener norefferer" className='outline-double mx-6 p-2'>XでPostする</a>
+      <a id="post-quote" onClick={postQuote} href="#" target="_blank" rel="noopener norefferer" className='outline-double mx-6'>XでPostする</a>
     </div>
   )
 }
