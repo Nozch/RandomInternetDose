@@ -30,11 +30,14 @@
   margin-bottom: 20px;
 }
 
-.quoteButton {
-  border: 1px solid #ccc;
+.button {
+  border: 2px double #ccc;
+  padding: 10px;
+  margin: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1.5; /* または 'normal' など、必要に応じて調整 */
+  height: 50px; /* これは例です、必要に応じて調整 */
+  box-sizing: border-box;
 }
 
-.postButton {
-  border: 1px solid #ccc;
-  color: white;
-}
