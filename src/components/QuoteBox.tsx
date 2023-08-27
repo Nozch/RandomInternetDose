@@ -25,10 +25,6 @@ const quotes: Quote[] = [
   { text: 'デンジ君が開けて?', author: 'マキマ' }
 ]
 
-//ランダムにコピペをゲットするロジック
-const getRandomQuote = (): Quote => {
-  return quotes[Math.floor(Math.random() * quotes.length)]
-}
 // 明度の計算
 const calculateLuminance = (rgb: RGB): number => {
   return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
@@ -65,19 +61,33 @@ const adjustColor = (rgb: RGB): RGB => {
 const QuoteBox: FC = () => {
   //ステートの定義
   const [quote, setQuote] = useState<Quote | null>(null);
+  const [lastQuoteIndex, setLastQuoteIndex] = useState<number | null>(null)
   const [typingText, setTypingText] = useState<string>("");
   const [typingAuthor, setTypingAuthor] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [backgroundColor, setBackgroundColor] = useState('#000000');
 
+  // ランダムにコピペをゲットするロジック
+  // 直前のものと同じものはとらない
+  const getRandomQuote = (): Quote => {
+    let newIndex: number;
+    do {
+      newIndex = Math.floor(Math.random() * quotes.length);
+    } while (newIndex === lastQuoteIndex && quotes.length > 1);
+
+    setLastQuoteIndex(newIndex)
+    return quotes[newIndex]
+  }
   //マウント時に一度updateQuoteさせる
   useEffect(() => {
     setIsLoading(true);
     setTimeout(() => {
       updateQuote();
       setIsLoading(false);
-    }, 500) // 非同期のシュミレート。500msecでローディング解除
-
+    }, 500) // 500msecでローディング解除
+  
+  // マウント時にのみ行うので依存配列空
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   //#new-quoteを押すと呼び出し
