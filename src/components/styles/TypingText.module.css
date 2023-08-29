@@ -1,0 +1,7 @@
+.container {
+  line-height: 1.5;
+}
+
+.cursor {
+  transition: opacity 0.5s ease;
+}

@@ -1,13 +1,17 @@
 import { useState, useEffect, FC } from 'react';
+import styles from './styles/TypingText.module.css'
 
 const TypingText: FC<{ text: string }> = ({ text }) => {
   const [displayText, setDisplayText] = useState<string>('');
   const [index, setIndex] = useState<number>(0);
+  const [showCursor, setShowCursor] = useState(true);
+  const [cursorOpacity, setCursorOpacity] = useState(1);
 
   useEffect(() => {
     // テキストと、インデックスの初期化
     setDisplayText('');
     setIndex(0);
+    setShowCursor(true)
   }, [text]);
 
 
@@ -21,10 +25,26 @@ const TypingText: FC<{ text: string }> = ({ text }) => {
         setIndex((prevIndex) => prevIndex + 1);
       }, 100);
       return () => clearTimeout(timer);
+    } else {
+      setShowCursor(false);
     }
   }, [displayText, text, index])
 
-  return <span>{displayText}</span>
+  useEffect(() => {
+    if (showCursor) {
+      const timer = setInterval(() => {
+        setCursorOpacity((prevOpacity) => prevOpacity === 0 ? 1 : 0);}, 200)
+
+        return () => clearInterval(timer);
+      }
+      }, [showCursor]);
+
+  return  (
+  <div className={styles.container}>
+    {displayText}
+    {showCursor && <span id="cursor" style={{ opacity: cursorOpacity }} className={styles.cursor}>_</span>}
+  </div>
+  )
 }
 
 export default TypingText;
