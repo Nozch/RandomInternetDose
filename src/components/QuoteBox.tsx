@@ -62,9 +62,9 @@ const QuoteBox: FC = () => {
   //ステートの定義
   const [quote, setQuote] = useState<Quote | null>(null);
   const [lastQuoteIndex, setLastQuoteIndex] = useState<number | null>(null)
-  const [typingText, setTypingText] = useState<string>("");
-  const [typingAuthor, setTypingAuthor] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [typingText, setTypingText] = useState("");
+  const [typingAuthor, setTypingAuthor] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [backgroundColor, setBackgroundColor] = useState('#000000');
 
   // ランダムにコピペをゲットするロジック
