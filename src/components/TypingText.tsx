@@ -2,8 +2,8 @@ import { useState, useEffect, FC } from 'react';
 import styles from './styles/TypingText.module.css'
 
 const TypingText: FC<{ text: string }> = ({ text }) => {
-  const [displayText, setDisplayText] = useState<string>('');
-  const [index, setIndex] = useState<number>(0);
+  const [displayText, setDisplayText] = useState('');
+  const [index, setIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
   const [cursorOpacity, setCursorOpacity] = useState(1);
 
